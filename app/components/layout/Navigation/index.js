@@ -7,6 +7,7 @@ import Badge from './../../shared/Badge';
 import Icon from './../../shared/Icon';
 import AgentsCount from './../../organization/AgentsCount';
 import BuildsCountBadge from './../../user/BuildsCountBadge';
+import BuildsDropdownList from './../../user/BuildsDropdownList';
 import NewChangelogsBadge from './../../user/NewChangelogsBadge';
 import permissions from './../../../lib/permissions';
 
@@ -34,6 +35,7 @@ class Navigation extends React.Component {
 
   state = {
     showingOrgDropdown: false,
+    showingBuildsDropdown: false,
     showingUserDropdown: false
   };
 
@@ -42,7 +44,12 @@ class Navigation extends React.Component {
     // for some people but switched the whole nav on for everyone, and it was
     // easier just to use the same feature flag
     let myBuildsNode = Features.NewNav ? (
-      <NavigationButton href={`/builds`}>My Builds <BuildsCountBadge className="hover-lime-child" viewer={this.props.viewer} /></NavigationButton>
+      <Dropdown align="right" width={170} className="flex" onToggle={this.handleBuildsDropdownToggle}>
+        <DropdownButton className={classNames({ "lime": this.state.showingBuildsDropdown })}>
+          My Builds <BuildsCountBadge className="hover-lime-child" viewer={this.props.viewer} />
+        </DropdownButton>
+        <BuildsDropdownList viewer={this.props.viewer} />
+      </Dropdown>
     ) : null;
 
     return (
@@ -144,6 +151,10 @@ class Navigation extends React.Component {
 
   handleOrgDropdownToggle = (visible) => {
     this.setState({ showingOrgDropdown: visible });
+  };
+
+  handleBuildsDropdownToggle = (visible) => {
+    this.setState({ showingBuildsDropdown: visible });
   };
 
   handleUserDropdownToggle = (visible) => {
